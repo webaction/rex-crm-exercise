@@ -11,10 +11,12 @@ class ContactCalled implements ShouldBroadcast
     use SerializesModels;
 
     public Contact $contact;
+    public array $callResult;
 
-    public function __construct(Contact $contact)
+    public function __construct(Contact $contact, array $callResult)
     {
         $this->contact = $contact;
+        $this->callResult = $callResult;
     }
 
     public function broadcastOn(): array

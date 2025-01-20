@@ -24,6 +24,12 @@ class ContactsControllerTest extends TestCase
         $this->app->instance(CallService::class, $this->callServiceMock);
     }
 
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
     #[Test]
     public function it_can_create_a_contact()
     {
@@ -155,10 +161,12 @@ class ContactsControllerTest extends TestCase
             'phone'     => '+61123456789',
         ]);
 
-        // Mock the CallService response
+        // Mock the CallService response with Contact object
         $this->callServiceMock->shouldReceive('makeCall')
             ->once()
-            ->with($contact->phone)
+            ->with(Mockery::on(function ($arg) use ($contact) {
+                return $arg instanceof Contact && $arg->id === $contact->id;
+            }))
             ->andReturn([
                 'status' => 'success',
                 'message' => 'Call initiated successfully.',
@@ -182,10 +190,12 @@ class ContactsControllerTest extends TestCase
             'phone'     => '+64987654321',
         ]);
 
-        // Mock the CallService response
+        // Mock the CallService response with Contact object
         $this->callServiceMock->shouldReceive('makeCall')
             ->once()
-            ->with($contact->phone)
+            ->with(Mockery::on(function ($arg) use ($contact) {
+                return $arg instanceof Contact && $arg->id === $contact->id;
+            }))
             ->andReturn([
                 'status' => 'busy',
                 'message' => 'The line is busy.',
@@ -207,10 +217,12 @@ class ContactsControllerTest extends TestCase
             'phone'     => '+65000000000',
         ]);
 
-        // Mock the CallService response
+        // Mock the CallService response with Contact object
         $this->callServiceMock->shouldReceive('makeCall')
             ->once()
-            ->with($contact->phone)
+            ->with(Mockery::on(function ($arg) use ($contact) {
+                return $arg instanceof Contact && $arg->id === $contact->id;
+            }))
             ->andReturn([
                 'status' => 'failed',
                 'message' => 'Failed to initiate call due to network error.',
@@ -232,17 +244,19 @@ class ContactsControllerTest extends TestCase
             'phone'     => '+61123456789',
         ]);
 
-        // Mock the CallService to throw an exception
+        // Mock the CallService to throw an exception when makeCall is invoked with Contact object
         $this->callServiceMock->shouldReceive('makeCall')
             ->once()
-            ->with($contact->phone)
+            ->with(Mockery::on(function ($arg) use ($contact) {
+                return $arg instanceof Contact && $arg->id === $contact->id;
+            }))
             ->andThrow(new \Exception('Service unavailable'));
 
         $response = $this->postJson("/api/tenants/1/contacts/{$contact->id}/call");
 
         $response->assertStatus(500)
             ->assertJson([
-                'message' => 'An error occurred while trying to initiate the call.',
+                'message' => 'Service unavailable',
             ]);
     }
 }

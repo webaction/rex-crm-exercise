@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Contacts\database\factories\ContactFactory;
 
 /**
- * @method static byTenant(int $tenantId)
  * @property mixed|string $phone
  */
 class Contact extends Model

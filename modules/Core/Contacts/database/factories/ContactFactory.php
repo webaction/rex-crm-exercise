@@ -11,7 +11,7 @@ class ContactFactory extends Factory
 
     public function definition(): array
     {
-        $tenantIds = [1, 2, 3]; // Example tenant IDs, adjust as needed
+        $tenantIds = [2, 3]; // Example tenant IDs, adjust as needed
 
         return [
             'tenant_id' => $this->faker->randomElement($tenantIds),
