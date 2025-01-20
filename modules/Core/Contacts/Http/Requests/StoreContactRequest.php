@@ -9,6 +9,16 @@ use Modules\Core\Contacts\Models\Contact;
 
 class StoreContactRequest extends FormRequest
 {
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Merge tenant_id from the route into the request data
+        $this->merge([
+            'tenant_id' => $this->route('tenantId'),
+        ]);
+    }
     public function rules(): array
     {
         return [
