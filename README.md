@@ -23,7 +23,7 @@ You're building a CRM that will over time expand to cover a broad domain. Assume
 - [x] Phones should be stored in E164 format.
 - [x] Phone numbers can only be Australian or New Zealand phone numbers.
 - [x] Contacts should be able to be efficiently retrieved based on their phone number or email domain.
-- [ ] Expose a method that allows for a contact to be called (doesn't have to actually place the call but should consider possible outcomes based on making a call to third party service).
+- [x] Expose a method that allows for a contact to be called (doesn't have to actually place the call but should consider possible outcomes based on making a call to third party service).
 - [x] Please include a short readme that explains the reasons for your chosen code structure / architecture that relates back to the above.”
 
 
