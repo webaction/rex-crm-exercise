@@ -3,28 +3,28 @@ Coding exercise - CRM that will over time expand to cover a broad domain.
 
 **Context:**
 
-We have teams of 4-5 engineers working per repo.
-Our business logic tends to need to be used synchronously, asynchronously + via multiple interfaces (cli vs http).
-Our apps are heavily CRUD based and often multiple resources may need to be manipulated within a single database transaction in the context of a single user request.
-Testing of business logic and rules around that is important
-Modules should be structured as consistently as possible.
-Error messages should be as informative as possible to API consumers who may be third parties.
-Data sets can grow quite large.
-This is a multi-tenant setup.
-Given the size of the code base, documentation is important.
+1. We have teams of 4-5 engineers working per repo.
+2. Our business logic tends to need to be used synchronously, asynchronously + via multiple interfaces (cli vs http).
+3. Our apps are heavily CRUD based and often multiple resources may need to be manipulated within a single database transaction in the context of a single user request.
+4. Testing of business logic and rules around that is important
+5. Modules should be structured as consistently as possible.
+6. Error messages should be as informative as possible to API consumers who may be third parties.
+7. Data sets can grow quite large.
+8. This is a multi-tenant setup.
+9. Given the size of the code base, documentation is important.
 
 **Problem & Acceptance Criteria:**
 
 You're building a CRM that will over time expand to cover a broad domain. Assume you're preparing production grade code that takes the above into account.
 
-Using laravel, provide a module that can be accessed via API + CLI.
-The module should allow for the storage and retrieval of contacts (names, phones and emails).
-Phone numbers and emails stored must be valid emails.
-Phones should be stored in E164 format.
-Phone numbers can only be Australian or New Zealand phone numbers.
-Contacts should be able to be efficiently retrieved based on their phone number or email domain.
-Expose a method that allows for a contact to be called (doesn't have to actually place the call but should consider possible outcomes based on making a call to third party service).
-Please include a short readme that explains the reasons for your chosen code structure / architecture that relates back to the above.”
+- [x] Using laravel, provide a module that can be accessed via API + CLI.
+- [x] The module should allow for the storage and retrieval of contacts (names, phones and emails).
+- [x] Phone numbers and emails stored must be valid emails.
+- [x] Phones should be stored in E164 format.
+- [x] Phone numbers can only be Australian or New Zealand phone numbers.
+- [x] Contacts should be able to be efficiently retrieved based on their phone number or email domain.
+- [ ] Expose a method that allows for a contact to be called (doesn't have to actually place the call but should consider possible outcomes based on making a call to third party service).
+- [x] Please include a short readme that explains the reasons for your chosen code structure / architecture that relates back to the above.”
 
 
 # Project Architecture & Code Structure
