@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Contacts\database\factories\ContactFactory;
 
+/**
+ * @method static byTenant(int $tenantId)
+ * @property mixed|string $phone
+ */
 class Contact extends Model
 {
     use HasFactory;
@@ -31,7 +35,7 @@ class Contact extends Model
      * @param int $tenantId
      * @return mixed
      */
-    public function scopeByTenant($query, int $tenantId)
+    public function scopeByTenant($query, int $tenantId): mixed
     {
         return $query->where('tenant_id', $tenantId);
     }

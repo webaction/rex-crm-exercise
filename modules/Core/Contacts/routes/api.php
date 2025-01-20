@@ -10,4 +10,7 @@ use Modules\Core\Contacts\Http\Controllers\ContactController;
 //  I would pick another variable name as not to mix with a tenancy module
 Route::group(['prefix' => 'api/tenants/{tenantId}'], function () {
     Route::apiResource('contacts', ContactController::class);
+
+    Route::post('contacts/{contactId}/call', [ContactController::class, 'call'])
+        ->name('contacts.call');
 });

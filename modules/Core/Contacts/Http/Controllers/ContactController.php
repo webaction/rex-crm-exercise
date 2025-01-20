@@ -7,9 +7,17 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\Contacts\Http\Requests\StoreContactRequest;
 use Modules\Core\Contacts\Models\Contact;
+use Modules\Core\Contacts\Services\CallService;
 
 class ContactController extends Controller
 {
+    protected CallService $callService;
+
+    public function __construct(CallService $callService)
+    {
+        $this->callService = $callService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -94,5 +102,36 @@ class ContactController extends Controller
         $contact->delete();
 
         return response()->json(['message' => 'Contact deleted successfully.']);
+    }
+
+    /**
+     * Initiate a call to the specified contact.
+     *
+     * POST /api/tenants/{tenantId}/contacts/{contactId}/call
+     */
+    public function call(int $tenantId, int $contactId): JsonResponse
+    {
+        // Fetch the contact within the tenant's scope
+        $contact = Contact::byTenant($tenantId)->findOrFail($contactId);
+
+        // Initiate the call using the CallService
+        $callResult = $this->callService->makeCall($contact);
+
+        // Handle different outcomes
+        return match ($callResult['status']) {
+            'success' => response()->json([
+                'message' => $callResult['message'],
+                'call_id' => $callResult['call_id'],
+            ], 200),
+            'failed', 'busy' => response()->json([
+                'message' => $callResult['message'],
+            ], 200),
+            'error' => response()->json([
+                'message' => $callResult['message'],
+            ], 500),
+            default => response()->json([
+                'message' => 'Unknown call status.',
+            ], 500),
+        };
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use Mockery;
+use Modules\Core\Contacts\Services\CallService;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,9 +13,15 @@ class ContactsControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $callServiceMock;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Mock the CallService and bind it to the service container
+        $this->callServiceMock = Mockery::mock(CallService::class);
+        $this->app->instance(CallService::class, $this->callServiceMock);
     }
 
     #[Test]
@@ -137,5 +145,104 @@ class ContactsControllerTest extends TestCase
             ->assertJsonFragment(['message' => 'Contact deleted successfully.']);
 
         $this->assertDatabaseMissing('contacts', ['id' => $contact->id]);
+    }
+
+    #[Test]
+    public function it_can_initiate_a_call_to_a_contact_successfully()
+    {
+        $contact = Contact::factory()->create([
+            'tenant_id' => 1,
+            'phone'     => '+61123456789',
+        ]);
+
+        // Mock the CallService response
+        $this->callServiceMock->shouldReceive('makeCall')
+            ->once()
+            ->with($contact->phone)
+            ->andReturn([
+                'status' => 'success',
+                'message' => 'Call initiated successfully.',
+                'call_id' => 'CALL123456',
+            ]);
+
+        $response = $this->postJson("/api/tenants/1/contacts/{$contact->id}/call");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'Call initiated successfully.',
+                'call_id' => 'CALL123456',
+            ]);
+    }
+
+    #[Test]
+    public function it_can_handle_a_busy_line_when_initiating_a_call()
+    {
+        $contact = Contact::factory()->create([
+            'tenant_id' => 1,
+            'phone'     => '+64987654321',
+        ]);
+
+        // Mock the CallService response
+        $this->callServiceMock->shouldReceive('makeCall')
+            ->once()
+            ->with($contact->phone)
+            ->andReturn([
+                'status' => 'busy',
+                'message' => 'The line is busy.',
+            ]);
+
+        $response = $this->postJson("/api/tenants/1/contacts/{$contact->id}/call");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'The line is busy.',
+            ]);
+    }
+
+    #[Test]
+    public function it_can_handle_call_failure()
+    {
+        $contact = Contact::factory()->create([
+            'tenant_id' => 1,
+            'phone'     => '+65000000000',
+        ]);
+
+        // Mock the CallService response
+        $this->callServiceMock->shouldReceive('makeCall')
+            ->once()
+            ->with($contact->phone)
+            ->andReturn([
+                'status' => 'failed',
+                'message' => 'Failed to initiate call due to network error.',
+            ]);
+
+        $response = $this->postJson("/api/tenants/1/contacts/{$contact->id}/call");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'Failed to initiate call due to network error.',
+            ]);
+    }
+
+    #[Test]
+    public function it_handles_call_service_errors_gracefully()
+    {
+        $contact = Contact::factory()->create([
+            'tenant_id' => 1,
+            'phone'     => '+61123456789',
+        ]);
+
+        // Mock the CallService to throw an exception
+        $this->callServiceMock->shouldReceive('makeCall')
+            ->once()
+            ->with($contact->phone)
+            ->andThrow(new \Exception('Service unavailable'));
+
+        $response = $this->postJson("/api/tenants/1/contacts/{$contact->id}/call");
+
+        $response->assertStatus(500)
+            ->assertJson([
+                'message' => 'An error occurred while trying to initiate the call.',
+            ]);
     }
 }
