@@ -1,0 +1,14 @@
+{
+    "name": "rex/core-contacts",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Core\\Contacts\\": "src/",
+            "Modules\\Core\\Contacts\\Database\\Factories\\": "database/factories/",
+            "Modules\\Core\\Contacts\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}

@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Core\Contacts\src\Models\Contact;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Modules\Core\Contacts\Models\Contact;
 
 class ContactTest extends TestCase
 {

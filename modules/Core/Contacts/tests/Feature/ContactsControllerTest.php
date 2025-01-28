@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
-use Modules\Core\Contacts\Services\CallService;
+use Modules\Core\Contacts\src\Models\Contact;
+use Modules\Core\Contacts\src\Services\CallService;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Modules\Core\Contacts\Models\Contact;
 
 class ContactsControllerTest extends TestCase
 {

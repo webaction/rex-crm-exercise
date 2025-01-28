@@ -2,14 +2,14 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Modules\Core\Contacts\Services\CallService;
-use Modules\Core\Contacts\Models\Contact;
-use Modules\Core\Contacts\Events\ContactCalled;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
-use PHPUnit\Framework\Attributes\Test;
 use Mockery;
+use Modules\Core\Contacts\src\Events\ContactCalled;
+use Modules\Core\Contacts\src\Models\Contact;
+use Modules\Core\Contacts\src\Services\CallService;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class CallServiceTest extends TestCase
 {

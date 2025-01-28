@@ -1,9 +1,10 @@
 <?php
 
-namespace Modules\Core\Contacts\database\factories;
+namespace Modules\Core\Contacts\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Core\Contacts\Models\Contact;
+use Modules\Core\Contacts\Models\Tenant;
 
 class ContactFactory extends Factory
 {
@@ -11,13 +12,18 @@ class ContactFactory extends Factory
 
     public function definition(): array
     {
-        $tenantIds = [2, 3]; // Example tenant IDs, adjust as needed
+        $tenantIds = Tenant::pluck('id')->toArray();
 
         return [
             'tenant_id' => $this->faker->randomElement($tenantIds),
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->numerify('+61########'),
+            'first_name' => $this->faker->name(),
+            'last_name' => $this->faker->name(),
+            'salutation' => $this->faker->title(),
+            'suffix' => $this->faker->suffix(),
+            'preferred_name' => $this->faker->name(),
+            'department' => $this->faker->word(),
+            'contact_type' => $this->faker->randomElement(['Buyer', 'Seller', 'Tenant', 'Landlord', 'Agent', 'Mortgage Broker', 'Other']),
+            'status' => $this->faker->randomElement(['Active', 'Inactive', 'Archive', 'Deleted']),
         ];
     }
 }
